@@ -28,15 +28,14 @@ class TodoService(
     @Transactional
     fun create(request: TodoRequest?): Todo {
         checkNotNull(request) { "TodoRequest is null" }
-        val Todo = Todo(
+        val todo = Todo(
             title = request.title,
             description = request.description,
             done = request.done,
             createdAt = LocalDateTime.now(),
-            updatedAt = LocalDateTime.now(),
         )
 
-        return todoRepository.save(Todo)
+        return todoRepository.save(todo)
     }
 
     @Transactional
