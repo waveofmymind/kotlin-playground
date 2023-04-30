@@ -3,8 +3,10 @@ package com.wave.issueservice.application
 import com.wave.issueservice.domain.Issue
 import com.wave.issueservice.domain.IssueRepository
 import com.wave.issueservice.domain.enums.IssueStatus
+import com.wave.issueservice.exception.NotFoundException
 import com.wave.issueservice.model.IssueRequest
 import com.wave.issueservice.model.IssueResponse
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -32,4 +34,9 @@ class IssueService(
     fun getAll(status: IssueStatus) =
         issueRepository.findAllByStatusOrderByCreatedAtDesc(status)
             ?.map { IssueResponse(it)}
+
+    fun get(id: Long): IssueResponse {
+        val issue = issueRepository.findByIdOrNull(id) ?: throw NotFoundException("이슈가 존재하지 않습니다.")
+        return IssueResponse(issue)
+    }
 }
