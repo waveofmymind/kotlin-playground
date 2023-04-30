@@ -3,6 +3,7 @@ package com.wave.issueservice.presentation
 import com.wave.issueservice.application.CommentService
 import com.wave.issueservice.config.AuthUser
 import com.wave.issueservice.model.CommentRequest
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -25,5 +26,13 @@ class CommentController(
         @PathVariable id: Long,
         @RequestBody request: CommentRequest,
     ) = commentService.edit(authUser.userId, id, request)
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun delete(
+        authUser: AuthUser,
+        @PathVariable issueId: Long,
+        @PathVariable id: Long,
+    ) = commentService.delete(id)
 
 }
