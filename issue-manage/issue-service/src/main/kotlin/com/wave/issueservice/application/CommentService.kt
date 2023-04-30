@@ -18,7 +18,7 @@ class CommentService(
 ) {
 
     @Transactional
-    fun create(issueId : Long, userId: Long, username : String, request : CommentRequest) : CommentResponse {
+    fun create(issueId: Long, userId: Long, username: String, request: CommentRequest): CommentResponse {
         val issue = issueRepository.findByIdOrNull(issueId) ?: throw NotFoundException("이슈가 존재하지 않습니다.")
 
         val comment = Comment(
@@ -32,7 +32,14 @@ class CommentService(
 
         return commentRepository.save(comment).toResponse()
     }
+    @Transactional
+    fun edit(userId: Long, id: Long, request: CommentRequest): CommentResponse? {
+        return commentRepository.findByIdAndUserId(id, userId)?.run {
+            body = request.body
+            commentRepository.save(this).toResponse()
+        }
 
+    }
 
 
 }
