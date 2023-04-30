@@ -1,6 +1,7 @@
 package com.wave.issueservice.model
 
 import com.fasterxml.jackson.annotation.JsonFormat
+import com.wave.issueservice.domain.Comment
 import com.wave.issueservice.domain.Issue
 import com.wave.issueservice.domain.enums.IssuePriority
 import com.wave.issueservice.domain.enums.IssueStatus
@@ -17,6 +18,7 @@ data class IssueRequest(
 
 data class IssueResponse(
     val id: Long,
+    val comments: List<CommentResponse> = emptyList(),
     val userId: Long,
     val summary: String,
     val description: String,
@@ -29,12 +31,12 @@ data class IssueResponse(
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     val updatedAt: LocalDateTime?,
 ) {
-
     companion object {
         operator fun invoke(issue: Issue) =
             with(issue) {
                 IssueResponse(
                     id = id!!,
+                    comments = comments.sortedByDescending(Comment::id).map { it.toResponse() },
                     summary = summary,
                     description = description,
                     status = status,
