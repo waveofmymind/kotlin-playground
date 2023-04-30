@@ -33,6 +33,6 @@ class CommentController(
         authUser: AuthUser,
         @PathVariable issueId: Long,
         @PathVariable id: Long,
-    ) = commentService.delete(id)
+    ) = commentService.delete(issueId, id, authUser.userId)
 
 }
