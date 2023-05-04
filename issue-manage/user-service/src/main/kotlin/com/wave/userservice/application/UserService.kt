@@ -1,8 +1,10 @@
 package com.wave.userservice.application
 
+import com.auth0.jwt.interfaces.DecodedJWT
 import com.wave.userservice.config.JWTProperties
 import com.wave.userservice.domain.User
 import com.wave.userservice.domain.UserRepository
+import com.wave.userservice.exception.InvalidJwtTokenException
 import com.wave.userservice.exception.PasswordNotMatchesException
 import com.wave.userservice.exception.UserExistsException
 import com.wave.userservice.exception.UserNotFoundException
@@ -68,5 +70,29 @@ class UserService(
 
     suspend fun logout(token: String) {
         cacheManager.awaitEvict(key = token)
+    }
+
+    suspend fun getByToken(token: String): User {
+        val cachedUser = cacheManager.awaitGetOrPut(key = token, ttl = CACHE_TTL) {
+            val decodedJWT: DecodedJWT = JWTUtils.decode(token,jwtProperties.secret,jwtProperties.issuer)
+
+            val userId : Long = decodedJWT.claims["userId"]?.asLong() ?: throw InvalidJwtTokenException()
+            get(userId)
+        }
+        return cachedUser
+    }
+
+    suspend fun get(userId : Long): User {
+        return userRepository.findById(userId) ?: throw UserNotFoundException()
+    }
+
+    suspend fun edit(token: String, username: String, profileUrl: String?) : User {
+        val user = getByToken(token)
+
+        val newUser = user.copy(username = username, profileUrl = profileUrl ?: user.profileUrl)
+
+        return userRepository.save(newUser).also {
+            cacheManager.awaitPut(token,value = it,ttl = CACHE_TTL)
+        }
     }
 }
