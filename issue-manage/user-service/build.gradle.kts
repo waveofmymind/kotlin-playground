@@ -10,6 +10,6 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 
     kapt("org.springframework.boot:spring-boot-configuration-processor")
-    implementation("at.favre.lib:bcrypt:0.12.0")
+    implementation("at.favre.lib:bcrypt:0.9.0")
     runtimeOnly("io.r2dbc:r2dbc-h2")
 }
