@@ -1,13 +1,12 @@
 package com.wave.userservice.presentation
 
 import com.wave.userservice.application.UserService
+import com.wave.userservice.model.AuthToken
 import com.wave.userservice.model.SignInRequest
 import com.wave.userservice.model.SignInResponse
 import com.wave.userservice.model.SignUpRequest
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -23,4 +22,10 @@ class UserController(
     @PostMapping("/signin")
     suspend fun signIn(@RequestBody signInRequest: SignInRequest) = userService.signIn(signInRequest)
 
+
+    @DeleteMapping("/logout")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    suspend fun logout(@AuthToken token: String) {
+        userService.logout(token)
+    }
 }
