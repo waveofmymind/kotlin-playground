@@ -39,4 +39,17 @@ class PostControllerTest(
             .andDo(MockMvcResultHandlers.print())
     }
 
+    @Test
+    @DisplayName("/posts 요청시 title값은 필수")
+    fun test2() {
+        //given
+        val request = PostCreate("","테스트내용1")
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/posts")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)))
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andDo(MockMvcResultHandlers.print())
+    }
+
 }
