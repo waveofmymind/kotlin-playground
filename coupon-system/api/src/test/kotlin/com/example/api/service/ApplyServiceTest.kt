@@ -49,7 +49,7 @@ class ApplyServiceTest {
         countDownLatch.await()
 
         couponRepository.count().let {
-            assertThat(it).isEqualTo(1000)
+            assertThat(it).isEqualTo(100)
         }
 
     }
