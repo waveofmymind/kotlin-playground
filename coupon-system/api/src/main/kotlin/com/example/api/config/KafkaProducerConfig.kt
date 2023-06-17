@@ -9,8 +9,6 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.kafka.core.DefaultKafkaProducerFactory
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.kafka.core.ProducerFactory
-import org.springframework.kafka.retrytopic.DestinationTopic
-import java.util.*
 import kotlin.collections.HashMap
 
 @Configuration
@@ -24,7 +22,7 @@ class KafkaProducerConfig {
         configs[KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
         configs[VALUE_SERIALIZER_CLASS_CONFIG] = LongSerializer::class.java
 
-        return DefaultKafkaProducerFactory(configs)
+        return DefaultKafkaProducerFactory(configs, StringSerializer(), LongSerializer())
     }
 
     @Bean
